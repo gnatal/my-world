@@ -62,3 +62,5 @@ PlayMode/
 
 # Windows system files
 Thumbs.db
+
+*.meta
