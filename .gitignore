@@ -1,0 +1,64 @@
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# Visual Studio / MonoDevelop generated files
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# Unity auto-generated files
+*.pidb.meta
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity Asset Store files
+Assets/AssetStoreTools*
+
+# Scriptable Object Assets
+*.asset
+
+# Crash Reports
+CrashReports/
+
+# Packed Scene Data
+*.pack
+
+# Builds
+Builds/
+
+# Gradle cache (Android)
+.gradle/
+
+# Unity Play Mode
+PlayMode/
+
+# User-specific files
+*.swp
+*.swm
+*.tmp
+*.bak
+*.bak2
+*.prev
+*.orig
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
