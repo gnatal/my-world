@@ -74,7 +74,7 @@ public class MegamanController : MonoBehaviour
         }
 
         // Shoot with J
-        if (Input.GetKeyDown(KeyCode.J) && !isShooting)
+        if (Input.GetKeyDown(KeyCode.J))
         {
             isShooting = true;
             animator.SetTrigger("Shoot");
@@ -119,6 +119,9 @@ public class MegamanController : MonoBehaviour
         {
             isJumping = false;
             animator.SetBool("isJumping", false);
+            if (rb.velocity.x != 0) {
+                animator.SetBool("isWalking", true);
+            }
         }
     }
 }
