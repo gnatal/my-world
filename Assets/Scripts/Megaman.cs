@@ -5,23 +5,23 @@ public class MegamanController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
     private AudioSource audioSource;
+    private SpriteRenderer chargeEffectRenderer;
 
     public AudioClip dashSound;
     public AudioClip shootSound;
     public AudioClip jumpSound;
-
     public AudioClip chargeSound;
 
     public GameObject weakShotPrefab;
     public GameObject middleShotPrefab;
     public GameObject strongShotPrefab;
+    public GameObject chargeEffect; // Reference to the charge effect GameObject
+
     public float walkSpeed = 5f;
     public float dashSpeed = 10f;
     public float jumpForce = 10f;
     private bool isDashing = false;
     private bool isJumping = false;
-    private bool isShooting = false;
-
     private bool isCharging = false;
     private float chargeStartTime;
 
@@ -30,6 +30,8 @@ public class MegamanController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
+        chargeEffectRenderer = chargeEffect.GetComponent<SpriteRenderer>(); // Get the renderer of the charge effect
+        chargeEffect.SetActive(false); // Start with the charge effect hidden
     }
 
     private void PlaySound(AudioClip clip)
@@ -85,28 +87,42 @@ public class MegamanController : MonoBehaviour
             PlaySound(dashSound);
         }
 
-        // Shooting
+        // Shooting / Charging
         if (Input.GetKeyDown(KeyCode.J))
         {
             isCharging = true;
-
-            chargeStartTime = Time.time; // Record the time when the button was pressed
-            isShooting = true;
+            chargeStartTime = Time.time;
             animator.SetTrigger("Shoot");
+            animator.SetBool("isCharging", true);
+            chargeEffect.SetActive(true); // Show the charge effect
+
+            SetChargeEffectTransparency(0.5f); // Set transparency to 50% (0.5 alpha)
+            if (!audioSource.isPlaying || audioSource.clip != shootSound)
+            {
+                audioSource.clip = chargeSound;
+                audioSource.loop = true; // Loop the charging sound
+                audioSource.Play();
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.J) && isCharging)
         {
             isCharging = false;
+            animator.SetBool("isCharging", false);
             float chargeTime = Time.time - chargeStartTime;
+            audioSource.loop = false;
+            audioSource.Stop();
+            chargeEffect.SetActive(false); // Hide the charge effect
 
             if (chargeTime >= 2f)
             {
                 Shoot(strongShotPrefab);
+                animator.SetTrigger("StrongShoot");
             }
             else if (chargeTime >= 1f)
             {
                 Shoot(middleShotPrefab);
+                animator.SetTrigger("StrongShoot");
             }
             else
             {
@@ -129,18 +145,26 @@ public class MegamanController : MonoBehaviour
 
     void Shoot(GameObject projectilePrefab)
     {
-        float offsetX = 0.4f;
+        float offsetX = 0.1f * transform.localScale.x;
         float offsetY = transform.localScale.y * 0.1f;
 
         Vector3 spawnPosition = new Vector3(transform.position.x + offsetX, transform.position.y + offsetY, transform.position.z);
 
-        GameObject bullet = Instantiate(projectilePrefab, spawnPosition,  Quaternion.identity);
+        GameObject bullet = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+
+        // Get the BulletController component and set the direction
+        BulletController bulletController = bullet.GetComponent<BulletController>();
+        if (bulletController != null)
+        {
+            bulletController.SetDirection(new Vector2(transform.localScale.x, 0)); // Set the direction based on the player's facing direction
+        }
+
         Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     void HandleIdleState()
     {
-        if (rb.velocity.x == 0 && !isShooting && !isJumping && !isDashing)
+        if (rb.velocity.x == 0 && !isJumping && !isDashing)
         {
             animator.SetBool("isIdle", true);
         }
@@ -155,9 +179,11 @@ public class MegamanController : MonoBehaviour
         isDashing = false;
     }
 
-    private void ResetShoot()
+    private void SetChargeEffectTransparency(float alpha)
     {
-        isShooting = false;
+        Color color = chargeEffectRenderer.color;
+        color.a = alpha; // Set the alpha for transparency
+        chargeEffectRenderer.color = color;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
