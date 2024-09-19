@@ -499,40 +499,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &793991357 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 70804137916902921, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+  m_PrefabInstance: {fileID: 3265645266034921985}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &793991359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2585391993935578293, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
   m_PrefabInstance: {fileID: 3265645266034921985}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1470711293
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1470711295}
-  - component: {fileID: 1470711294}
-  m_Layer: 0
-  m_Name: SoundEffects
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!82 &1470711294
+--- !u!82 &793991364
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1470711293}
+  m_GameObject: {fileID: 793991357}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 18b6c848832fe4f15a9110501200027e, type: 3}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -617,21 +605,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!4 &1470711295
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1470711293}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.10452846, y: -0, z: -0, w: 0.9945219}
-  m_LocalPosition: {x: 1.6956038, y: -1.1032829, z: -0.020152107}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 793991359}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1497353423
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,17 +745,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Megaman
       objectReference: {fileID: 0}
+    - target: {fileID: 70804137916902921, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 2585391993935578293, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.07
+      value: -1.33
       objectReference: {fileID: 0}
     - target: {fileID: 2585391993935578293, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.12
+      value: -0.13
       objectReference: {fileID: 0}
     - target: {fileID: 2585391993935578293, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.32
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 2585391993935578293, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: m_LocalRotation.w
@@ -812,13 +789,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: dashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 133ed936a66414a44b56e1a28699dbc5, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: firePoint
+      value: 
+      objectReference: {fileID: 793991359}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: jumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2714494f685f04a02bb9c252ba0a5930, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: dashSounhd
+      value: 
+      objectReference: {fileID: 8300000, guid: 133ed936a66414a44b56e1a28699dbc5, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: shootSound
+      value: 
+      objectReference: {fileID: 8300000, guid: f044749ae3b0249b8a1ebc74f0e7f75b, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: chargeSound
+      value: 
+      objectReference: {fileID: 8300000, guid: cc56c5b1d607d488798fe1081fdc48d3, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: weakShotPrefab
+      value: 
+      objectReference: {fileID: 2782358436028203246, guid: ab1260eba0fe1462c8ca2c3cded01a86, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: middleShotPrefab
+      value: 
+      objectReference: {fileID: 645975654392024016, guid: 6f35f9f511bb847b0ac9104708666506, type: 3}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: strongShotPrefab
+      value: 
+      objectReference: {fileID: 4171613118734755282, guid: 33ce05a6b92244426ba396e28df6dea9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2585391993935578293, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 70804137916902921, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1470711295}
-    m_AddedComponents: []
+      addedObject: {fileID: 793991364}
   m_SourcePrefab: {fileID: 100100000, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

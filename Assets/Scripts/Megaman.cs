@@ -4,8 +4,17 @@ public class MegamanController : MonoBehaviour
 {
     private Animator animator;
     private Rigidbody2D rb;
+    private AudioSource audioSource;
 
-    // Movement parameters
+    public AudioClip dashSound;
+    public AudioClip shootSound;
+    public AudioClip jumpSound;
+
+    public AudioClip chargeSound;
+
+    public GameObject weakShotPrefab;
+    public GameObject middleShotPrefab;
+    public GameObject strongShotPrefab;
     public float walkSpeed = 5f;
     public float dashSpeed = 10f;
     public float jumpForce = 10f;
@@ -13,10 +22,20 @@ public class MegamanController : MonoBehaviour
     private bool isJumping = false;
     private bool isShooting = false;
 
+    private bool isCharging = false;
+    private float chargeStartTime;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 
     void Update()
@@ -29,23 +48,15 @@ public class MegamanController : MonoBehaviour
     void HandleMovement()
     {
         float moveX = 0;
-        float moveY = 0;
-
-        // Walking with WASD or Arrow keys
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-            moveY = 1;
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            moveY = -1;
 
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             moveX = -1;
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             moveX = 1;
 
-        Vector2 movement = new Vector2(moveX, moveY).normalized * walkSpeed;
-        rb.velocity = new Vector2(movement.x, rb.velocity.y); // Move horizontally only
+        Vector2 movement = new Vector2(moveX, 0).normalized * walkSpeed;
+        rb.velocity = new Vector2(movement.x, rb.velocity.y);
 
-        // Set walking animation
         if (movement != Vector2.zero && !isDashing)
         {
             animator.SetBool("isWalking", true);
@@ -55,7 +66,6 @@ public class MegamanController : MonoBehaviour
             animator.SetBool("isWalking", false);
         }
 
-        // Flip sprite depending on the direction
         if (moveX > 0)
             transform.localScale = new Vector3(1, 1, 1);
         else if (moveX < 0)
@@ -64,30 +74,68 @@ public class MegamanController : MonoBehaviour
 
     void HandleActions()
     {
-        // Dash with L
+        // Dashing
         if (Input.GetKeyDown(KeyCode.L) && !isDashing)
         {
             isDashing = true;
             animator.SetTrigger("Dash");
             rb.velocity = new Vector2(transform.localScale.x * dashSpeed, rb.velocity.y);
-            Invoke("ResetDash", 0.5f); // Reset dash state after 0.5 seconds
+            Invoke("ResetDash", 0.5f);
+
+            PlaySound(dashSound);
         }
 
-        // Shoot with J
+        // Shooting
         if (Input.GetKeyDown(KeyCode.J))
         {
+            isCharging = true;
+
+            chargeStartTime = Time.time; // Record the time when the button was pressed
             isShooting = true;
             animator.SetTrigger("Shoot");
-            Invoke("ResetShoot", 0.5f); // Reset shooting state after 0.5 seconds
         }
 
-        // Jump with K
+        if (Input.GetKeyUp(KeyCode.J) && isCharging)
+        {
+            isCharging = false;
+            float chargeTime = Time.time - chargeStartTime;
+
+            if (chargeTime >= 2f)
+            {
+                Shoot(strongShotPrefab);
+            }
+            else if (chargeTime >= 1f)
+            {
+                Shoot(middleShotPrefab);
+            }
+            else
+            {
+                Shoot(weakShotPrefab);
+            }
+
+            PlaySound(shootSound);
+        }
+
+        // Jumping
         if (Input.GetKeyDown(KeyCode.K) && !isJumping)
         {
             isJumping = true;
             animator.SetBool("isJumping", true);
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+            PlaySound(jumpSound);
         }
+    }
+
+    void Shoot(GameObject projectilePrefab)
+    {
+        float offsetX = 0.4f;
+        float offsetY = transform.localScale.y * 0.1f;
+
+        Vector3 spawnPosition = new Vector3(transform.position.x + offsetX, transform.position.y + offsetY, transform.position.z);
+
+        GameObject bullet = Instantiate(projectilePrefab, spawnPosition,  Quaternion.identity);
+        Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     void HandleIdleState()
@@ -114,12 +162,12 @@ public class MegamanController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Reset jumping state when landing
         if (collision.gameObject.CompareTag("Ground"))
         {
             isJumping = false;
             animator.SetBool("isJumping", false);
-            if (rb.velocity.x != 0) {
+            if (rb.velocity.x != 0)
+            {
                 animator.SetBool("isWalking", true);
             }
         }
