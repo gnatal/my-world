@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections; 
+using System.Collections;
 
 public class BasicEnemy : MonoBehaviour
 {
@@ -7,6 +7,17 @@ public class BasicEnemy : MonoBehaviour
     public float moveSpeed = 2f;
 
     public Animator animator;
+
+    public AudioClip deathSound;
+    private AudioSource audioSource;
+
+    private bool isDead = false;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
 
     void Update()
     {
@@ -17,14 +28,24 @@ public class BasicEnemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            Die();  
+            Die();
         }
     }
 
     private void Die()
     {
-        animator.SetTrigger("Die"); 
-
+        if (isDead)
+        {
+            return;
+        }
+        isDead = true;
+        animator.SetTrigger("Die");
+        if (deathSound != null && audioSource.clip != null)
+        {
+            audioSource.clip = deathSound;
+            audioSource.loop = false;
+            audioSource.Play();        
+        }
         StartCoroutine(WaitForDeathAnimation());
     }
 
