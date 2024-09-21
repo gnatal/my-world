@@ -49,6 +49,12 @@ public class MegamanController : MonoBehaviour
 
     void HandleMovement()
     {
+        if (isDashing)
+        {
+            // Skip movement handling while dashing
+            return;
+        }
+
         float moveX = 0;
 
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
@@ -59,7 +65,7 @@ public class MegamanController : MonoBehaviour
         Vector2 movement = new Vector2(moveX, 0).normalized * walkSpeed;
         rb.velocity = new Vector2(movement.x, rb.velocity.y);
 
-        if (movement != Vector2.zero && !isDashing)
+        if (movement != Vector2.zero)
         {
             animator.SetBool("isWalking", true);
         }
@@ -74,13 +80,15 @@ public class MegamanController : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
     }
 
+
     void HandleActions()
     {
-        // Dashing
         if (Input.GetKeyDown(KeyCode.L) && !isDashing)
         {
+            
             isDashing = true;
             animator.SetTrigger("Dash");
+            Debug.Log(transform.localScale);
             rb.velocity = new Vector2(transform.localScale.x * dashSpeed, rb.velocity.y);
             Invoke("ResetDash", 0.5f);
 
