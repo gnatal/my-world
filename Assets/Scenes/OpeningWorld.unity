@@ -2907,6 +2907,10 @@ PrefabInstance:
       propertyPath: strongShotPrefab
       value: 
       objectReference: {fileID: 4171613118734755282, guid: 33ce05a6b92244426ba396e28df6dea9, type: 3}
+    - target: {fileID: 5494601427136969556, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6140287903713655759, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: m_Mass
       value: 80
@@ -2919,6 +2923,10 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6328545243903403211, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 33ad56fc00cd44a968eb160f74cb7359, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
