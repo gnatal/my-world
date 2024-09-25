@@ -71,7 +71,14 @@ public class MegamanController : MonoBehaviour
 
     void HandleState()
     {
-        HandleGroundedState();
+        switch (currentState) {
+            case PlayerState.Grounded:
+                HandleGroundedState();
+                break;
+            case PlayerState.Air:
+                HandleAirState();
+                break;
+        }
     }
 
     void HandleGroundedState()
@@ -88,6 +95,35 @@ public class MegamanController : MonoBehaviour
         }
 
         HandleIdleState();
+    }
+
+    void HandleAirState()
+    {
+        if (rb.velocity.y < 0 && !isJumping) {
+            animator.Play(PlayerAnimations.FALL);
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                isCharging = true;
+                chargeStartTime = Time.time;
+                animator.Play(PlayerAnimations.JUMP_SHOOT);
+            }
+            
+            if (Input.GetKeyUp(KeyCode.J) && isCharging)
+            {
+                isCharging = false;
+                float chargeTime = Time.time - chargeStartTime;
+                chargeEffect.SetActive(false);
+
+                if (chargeTime >= 2f)
+                    Shoot(strongShotPrefab);
+                else if (chargeTime >= 1f)
+                    Shoot(middleShotPrefab);
+                else
+                    Shoot(weakShotPrefab);
+
+                PlaySound(shootSound);
+            }
+        }   
     }
 
     void HandleMovement()
@@ -213,13 +249,11 @@ public class MegamanController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        // Add logic to check if the player is touching the ground
         return true; // Replace with ground check logic
     }
 
     private bool IsTouchingWall()
     {
-        // Add logic to check if the player is touching a wall
         return true; // Replace with wall check logic
     }
 
@@ -231,6 +265,14 @@ public class MegamanController : MonoBehaviour
             currentState = PlayerState.Grounded;
         }
 
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            currentState = PlayerState.Air;
+        }
     }
 
     void EndBorning()
