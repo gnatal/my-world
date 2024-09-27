@@ -41,11 +41,13 @@ public class MegamanController : MonoBehaviour
     public float dashSpeed = 10f;
     public float jumpForce = 10f;
     public float wallSlideSpeed = 2f;
+    public float shootDuration = 0.3f;
     private bool isDashing = false;
     private bool isJumping = false;
     private bool isCharging = false;
     private float chargeStartTime;
     private bool isBorning = true;
+    private bool isShooting = false;
 
     private enum PlayerState { Grounded, Air, Wall }
     private PlayerState currentState;
@@ -105,6 +107,7 @@ public class MegamanController : MonoBehaviour
             {
                 isCharging = true;
                 chargeStartTime = Time.time;
+                this.isShooting = true;
                 animator.Play(PlayerAnimations.JUMP_SHOOT);
             }
             
@@ -113,6 +116,7 @@ public class MegamanController : MonoBehaviour
                 isCharging = false;
                 float chargeTime = Time.time - chargeStartTime;
                 chargeEffect.SetActive(false);
+                Invoke("EndShooting", shootDuration);
 
                 if (chargeTime >= 2f)
                     Shoot(strongShotPrefab);
@@ -142,7 +146,7 @@ public class MegamanController : MonoBehaviour
         AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
         if (rb.velocity.y == 0 && rb.velocity.x != 0  && !currentStateInfo.IsName(PlayerAnimations.WALK)) {
-            animator.Play(PlayerAnimations.WALK);
+            if(!currentStateInfo.IsName(PlayerAnimations.WALK_SHOOT) && !this.isShooting) animator.Play(PlayerAnimations.WALK);
         }        
 
 
@@ -180,8 +184,7 @@ public class MegamanController : MonoBehaviour
         {
             isCharging = true;
             chargeStartTime = Time.time;
-            if (rb.velocity.x == 0) animator.Play(PlayerAnimations.SHOOT);
-            else animator.Play(PlayerAnimations.WALK_SHOOT);
+            this.isShooting = true;
         }
 
         if (Input.GetKeyUp(KeyCode.J) && isCharging)
@@ -189,6 +192,16 @@ public class MegamanController : MonoBehaviour
             isCharging = false;
             float chargeTime = Time.time - chargeStartTime;
             chargeEffect.SetActive(false);
+            CancelInvoke("EndShooting");
+            Invoke("EndShooting", shootDuration);
+
+            AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            float currentWalkTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            if (rb.velocity.x == 0 && !currentStateInfo.IsName(PlayerAnimations.SHOOT)) animator.Play(PlayerAnimations.SHOOT);
+            else {
+                if (!currentStateInfo.IsName(PlayerAnimations.WALK_SHOOT)) animator.Play(PlayerAnimations.WALK_SHOOT,0 ,currentWalkTime);
+                else if (currentWalkTime > 0.8) animator.Play(PlayerAnimations.WALK_SHOOT);
+            }
 
             if (chargeTime >= 2f)
                 Shoot(strongShotPrefab);
@@ -210,7 +223,7 @@ public class MegamanController : MonoBehaviour
 
     void HandleIdleState()
     {
-        if (rb.velocity.x == 0 && rb.velocity.y == 0 && !isJumping && !isDashing) {
+        if (rb.velocity.x == 0 && rb.velocity.y == 0 && !isJumping && !isDashing && !isShooting) {
             AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (!currentStateInfo.IsName(PlayerAnimations.IDLE))
                 animator.Play(PlayerAnimations.IDLE);
@@ -278,5 +291,10 @@ public class MegamanController : MonoBehaviour
     void EndBorning()
     {
         this.isBorning = false;
+    }
+
+    void EndShooting () {
+        this.isShooting = false;
+        HandleIdleState();
     }
 }
