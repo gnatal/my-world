@@ -2893,7 +2893,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: dashSpeed
-      value: 5
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
+      propertyPath: jumpForce
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4000732025092862291, guid: b7303bcd3f7c34a7d9044b775666dd18, type: 3}
       propertyPath: weakShotPrefab
